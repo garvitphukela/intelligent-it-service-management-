@@ -12,11 +12,10 @@ subtitle: "CS F213 / MAC F212 Object-Oriented Programming · Semester I, 2026–
 **CS F213 / MAC F212 — Object-Oriented Programming**
 Semester I, 2026–2027 · Project Report
 
+
 | | |
 |---|---|
-| | |
-|---|---|
-| **Group No.** | <96> |
+| **Group No.** | 96 |
 | **Student Name** | Garvit Phukela |
 | **BITS ID** | 2025A7PS0936H |
 | **Branch** | B.E. Computer Science (A7) |
