@@ -14,11 +14,16 @@ Semester I, 2026–2027 · Project Report
 
 | | |
 |---|---|
-| **Group No.** | `<group number>` |
-| **Members** | `<Member 1 — ID>` · `<Member 2 — ID>` · `<Member 3 — ID>` · `<Member 4 — ID>` · `<Member 5 — ID>` |
-| **Repository** | https://github.com/garvitphukela/intelligent-it-service-management-|
-| **Live deployment** | https://itsm-273t.onrender.com |
-| **Demo video** | `<group>_OOP_S1_2026-2027_Project` |
+| | |
+|---|---|
+| **Group No.** | <96> |
+| **Student Name** | Garvit Phukela |
+| **BITS ID** | 2025A7PS0936H |
+| **Branch** | B.E. Computer Science (A7) |
+| **Campus** | BITS Pilani, Hyderabad Campus |
+| **Repository** | https://github.com/garvitphukela/intelligent-it-service-management- |
+| **Live Deployment** | https://itsm-273t.onrender.com |
+| **Demo Video** | To be added after recording |
 
 </div>
 
@@ -630,15 +635,23 @@ Each member introduces themselves and explains the module(s) they own (see §13)
 
 ## 13. Team Responsibilities
 
-| Member | Primary responsibility | Modules to present in the demo |
-|---|---|---|
-| `<Member 1>` | UI / UX | React app, role-based portals, design system, live dashboard |
-| `<Member 2>` | Backend & APIs | Controllers, security (JWT/RBAC), exception handling, WebSocket |
-| `<Member 3>` | Domain model & OOP | User hierarchy, Incident aggregate, State pattern, Strategy/Observer/Factory/Adapter |
-| `<Member 4>` | Database & persistence | JPA mapping, ER design, repositories, seed data, PostgreSQL/Docker |
-| `<Member 5>` | Testing, DevOps & intelligent features | Test suite, CI, deployment, categoriser, duplicates, correlation, SLA risk |
+The project is being submitted individually by Garvit Phukela.
 
-Every member is expected to understand the whole system; the architecture section and this report are the shared reference.
+The following areas form the scope of the project work and should be attributed according to the work actually completed:
+
+Requirement Analysis: Understanding the project requirements, identifying system objectives, and defining the incident management workflows.
+
+System Design: Designing the application architecture, object-oriented class structure, UML diagrams, and database relationships.
+
+Backend Development: Implementing and integrating Java and Spring Boot components for incident management, authentication, assignment, and other business operations.
+
+Frontend Development: Developing and integrating the React and TypeScript user interface.
+
+Testing and Debugging: Verifying application functionality, resolving errors, and reviewing automated test results.
+
+Deployment: Configuring and verifying the deployed application.
+
+Documentation: Preparing the project report, technical explanations, and demonstration materials.
 
 ---
 
