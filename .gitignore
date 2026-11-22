@@ -11,3 +11,4 @@ frontend/dist/
 # env
 .env
 docs/report.html
+node_modules/
