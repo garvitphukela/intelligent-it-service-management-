@@ -1,0 +1,135 @@
+classDiagram
+  direction TB
+  class User {
+    <<abstract>>
+    -Long id
+    -String code
+    -String fullName
+    -String email
+    -String passwordHash
+    -boolean active
+    -Set~NotificationChannelType~ preferredChannels
+    +getRole()* Role
+    +getDisplayTitle()* String
+    +changePassword(hash)
+    +deactivate()
+  }
+  class Employee
+  class Technician {
+    -Set~String~ skills
+    -int maxWorkload
+    -int experienceYears
+    -boolean available
+    +hasSkill(skill) boolean
+    +canTakeMoreWork(load) boolean
+    +getEscalationTier() int
+  }
+  class TeamLead {
+    +getEscalationTier() int
+  }
+  class Administrator
+  class ITManager
+  User <|-- Employee
+  User <|-- Technician
+  Technician <|-- TeamLead
+  User <|-- Administrator
+  Administrator <|-- ITManager
+
+  class Incident {
+    -Long id
+    -String title
+    -String description
+    -Impact impact
+    -Urgency urgency
+    -int affectedUsers
+    -Priority priority
+    -IncidentStatus status
+    -SlaStatus slaStatus
+    -int escalationLevel
+    -long version
+    +assignTo(Technician, Instant)
+    +acknowledge(Instant)
+    +startWork(Instant)
+    +requestInfo(Instant)
+    +provideInfo(Instant)
+    +resolve(Resolution, Instant)
+    +verify(Instant)
+    +reopen(Instant)
+    +close(notes, by, Instant)
+    +cancel(reason, Instant)
+    +applyPriority(p, score, rationale)
+    +addNote(...) IncidentNote
+    +linkAsDuplicateOf(Incident)
+  }
+  class IncidentNote {
+    -NoteType type
+    -String text
+    -Instant createdAt
+  }
+  class SlaTracker {
+    <<embeddable>>
+    -Instant responseDueAt
+    -Instant resolutionDueAt
+    -Instant respondedAt
+    -Instant resolvedAt
+    -Instant pausedAt
+    +start(from, resp, res, warn%)
+    +pause(at) / resume(at)
+    +detectBreaches(now) boolean
+    +statusAt(now, status) SlaStatus
+  }
+  class Resolution {
+    <<value object>>
+    -String summary
+    -String rootCause
+    -String steps
+  }
+  class Feedback {
+    <<value object>>
+    -int rating
+    -String comment
+  }
+  class ITService {
+    -String name
+    -int businessCriticality
+    -int userBase
+    +addDependency(ITService)
+    +allDependencies() Set
+  }
+  class Category {
+    -String name
+    -String requiredSkill
+    -Set~String~ keywords
+  }
+  class SlaPolicy {
+    -Priority priority
+    -int responseMinutes
+    -int resolutionMinutes
+    -int warningThresholdPercent
+  }
+  class AuditEntry {
+    -Instant timestamp
+    -String actorName
+    -String action
+    -String previousState
+    -String newState
+  }
+  class Notification {
+    -NotificationChannelType channel
+    -String title
+    -boolean read
+  }
+
+  Incident *-- "0..*" IncidentNote : composition
+  Incident *-- "1" SlaTracker
+  Incident *-- "0..1" Resolution
+  Incident *-- "0..1" Feedback
+  Incident "0..*" --> "1" User : reporter
+  Incident "0..*" --> "0..1" Technician : assignedTo
+  Incident "0..*" --> "1" ITService : affects
+  Incident "0..*" --> "0..1" Category
+  Incident "0..*" --> "0..1" SlaPolicy
+  Incident "0..*" --> "0..1" Incident : duplicateOf
+  ITService "0..*" o-- "0..*" ITService : dependsOn
+  SlaPolicy "0..*" --> "0..1" ITService : scope
+  Notification "0..*" --> "1" User : recipient

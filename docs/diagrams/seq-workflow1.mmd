@@ -1,0 +1,32 @@
+sequenceDiagram
+  autonumber
+  actor E as Employee
+  participant C as IncidentController
+  participant S as IncidentService
+  participant F as IncidentFactory
+  participant AC as AutoCategorizer
+  participant P as PriorityStrategy
+  participant SL as SlaService
+  participant A as AssignmentStrategy
+  participant I as Incident (State)
+  participant EP as EventPublisher
+  participant L as Audit / Notification / Dashboard listeners
+  E->>C: POST /api/incidents
+  C->>S: create(request)
+  S->>F: create(request, reporter)
+  F-->>S: Incident (NEW)
+  S->>EP: IncidentCreated
+  EP->>L: onEvent → audit row, notify reporter
+  S->>AC: best(text)
+  AC-->>S: Category + confidence
+  S->>P: calculate(impact, urgency, criticality, users)
+  P-->>S: P1, score, rationale
+  S->>SL: apply(incident)  (find policy, start clock)
+  S->>I: markClassified()  NEW→CLASSIFIED
+  S->>A: select(context)
+  A-->>S: best technician + reason
+  S->>I: assignTo(tech)  CLASSIFIED→ASSIGNED
+  S->>EP: IncidentAssigned
+  EP->>L: audit, in-app + email (+SMS for P1), WebSocket push
+  S-->>C: detail + possible duplicates
+  C-->>E: 201 Created

@@ -1,0 +1,96 @@
+erDiagram
+  USERS ||--o{ INCIDENTS : "reports (reporter_id)"
+  USERS ||--o{ INCIDENTS : "works on (technician_id)"
+  USERS ||--o{ NOTIFICATIONS : receives
+  USERS ||--o{ TECHNICIAN_SKILLS : has
+  USERS ||--o{ USER_NOTIFICATION_CHANNELS : prefers
+  IT_SERVICES ||--o{ INCIDENTS : affected
+  IT_SERVICES ||--o{ SERVICE_DEPENDENCIES : "service_id"
+  IT_SERVICES ||--o{ SERVICE_DEPENDENCIES : "depends_on_id"
+  IT_SERVICES |o--o{ SLA_POLICIES : "scopes (nullable = default)"
+  CATEGORIES ||--o{ INCIDENTS : classifies
+  CATEGORIES ||--o{ CATEGORY_KEYWORDS : has
+  SLA_POLICIES ||--o{ INCIDENTS : governs
+  INCIDENTS ||--o{ INCIDENT_NOTES : contains
+  INCIDENTS |o--o{ INCIDENTS : "duplicate of (master_incident_id)"
+  INCIDENTS ||--o{ AUDIT_ENTRIES : "history (incident_id)"
+
+  USERS {
+    bigint id PK
+    varchar user_type "discriminator: EMPLOYEE|TECHNICIAN|TEAM_LEAD|ADMIN|MANAGER"
+    varchar code UK
+    varchar full_name
+    varchar email UK
+    varchar password_hash "BCrypt"
+    boolean active
+    int max_workload "technicians only"
+    int experience_years
+    boolean available
+  }
+  INCIDENTS {
+    bigint id PK
+    varchar title
+    varchar description
+    varchar status
+    varchar priority
+    varchar impact
+    varchar urgency
+    int affected_users
+    bigint reporter_id FK
+    bigint technician_id FK
+    bigint service_id FK
+    bigint category_id FK
+    bigint sla_policy_id FK
+    bigint master_incident_id FK
+    timestamptz sla_response_due
+    timestamptz sla_resolution_due
+    boolean sla_response_breached
+    boolean sla_resolution_breached
+    varchar sla_status
+    int escalation_level
+    varchar resolution_summary
+    int feedback_rating
+    bigint version "optimistic lock"
+  }
+  IT_SERVICES {
+    bigint id PK
+    varchar name UK
+    int business_criticality
+    int user_base
+  }
+  CATEGORIES {
+    bigint id PK
+    varchar name UK
+    varchar required_skill
+  }
+  SLA_POLICIES {
+    bigint id PK
+    bigint service_id FK "null = default"
+    varchar priority
+    int response_minutes
+    int resolution_minutes
+    int warning_threshold_percent
+  }
+  INCIDENT_NOTES {
+    bigint id PK
+    bigint incident_id FK
+    varchar type
+    varchar text
+  }
+  AUDIT_ENTRIES {
+    bigint id PK
+    timestamptz timestamp
+    varchar actor_name
+    varchar action
+    bigint incident_id
+    varchar previous_state
+    varchar new_state
+  }
+  NOTIFICATIONS {
+    bigint id PK
+    bigint recipient_id FK
+    varchar channel
+    varchar event_type
+    boolean read_flag
+    varchar delivery_status
+  }

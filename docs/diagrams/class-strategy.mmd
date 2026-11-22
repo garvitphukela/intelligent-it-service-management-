@@ -1,0 +1,40 @@
+classDiagram
+  direction TB
+  class StrategyRegistry {
+    -Map~String,AssignmentStrategy~ assignment
+    -Map~String,PriorityStrategy~ priority
+    +activeAssignment() AssignmentStrategy
+    +activePriority() PriorityStrategy
+    +update(assignmentKey, priorityKey, autoAssign)
+  }
+  class PriorityStrategy {
+    <<interface>>
+    +key() String
+    +displayName() String
+    +calculate(PriorityInput) PriorityResult
+  }
+  class AssignmentStrategy {
+    <<interface>>
+    +key() String
+    +rank(AssignmentContext) List~TechnicianScore~
+    +select(AssignmentContext) Optional~TechnicianScore~
+  }
+  class PriorityInput {
+    <<record>>
+    impact, urgency, businessCriticality,
+    affectedUsers, serviceUserBase, categoryName
+  }
+  class AssignmentContext {
+    <<record>>
+    incident, candidates, workload, serviceExperience
+  }
+  StrategyRegistry o-- PriorityStrategy
+  StrategyRegistry o-- AssignmentStrategy
+  PriorityStrategy ..> PriorityInput
+  AssignmentStrategy ..> AssignmentContext
+  PriorityStrategy <|.. WeightedScoringPriorityStrategy
+  PriorityStrategy <|.. MatrixPriorityStrategy
+  AssignmentStrategy <|.. SkillBasedAssignmentStrategy
+  AssignmentStrategy <|.. LeastLoadedAssignmentStrategy
+  AssignmentStrategy <|.. RoundRobinAssignmentStrategy
+  AssignmentStrategy <|.. SmartRecommendationStrategy

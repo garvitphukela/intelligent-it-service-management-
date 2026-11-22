@@ -1,0 +1,56 @@
+classDiagram
+  direction TB
+  class IncidentEventPublisher {
+    -List~IncidentEventListener~ listeners
+    +publish(IncidentEvent)
+  }
+  class IncidentEvent {
+    <<abstract>>
+    +type()* String
+    +description()* String
+    +audience() Set~Audience~
+    +isUrgent() boolean
+  }
+  class IncidentEventListener {
+    <<interface>>
+    +onEvent(IncidentEvent)
+    +supports(IncidentEvent) boolean
+    +order() int
+  }
+  IncidentEventPublisher o-- IncidentEventListener
+  IncidentEventPublisher ..> IncidentEvent
+  IncidentEvent <|-- IncidentCreated
+  IncidentEvent <|-- IncidentAssigned
+  IncidentEvent <|-- StatusChanged
+  IncidentEvent <|-- SlaWarning
+  IncidentEvent <|-- SlaBreached
+  IncidentEvent <|-- Escalated
+  IncidentEvent <|-- MajorIncidentDetected
+  IncidentEventListener <|.. AuditTrailListener
+  IncidentEventListener <|.. NotificationListener
+  IncidentEventListener <|.. DashboardBroadcastListener
+  NotificationListener --> NotificationService
+  class NotificationService {
+    +dispatch(IncidentEvent) int
+  }
+  class NotificationChannelFactory {
+    +forType(NotificationChannelType) Optional
+  }
+  class NotificationChannel {
+    <<interface>>
+    +type() NotificationChannelType
+    +send(NotificationMessage) DeliveryResult
+  }
+  class AbstractPersistingChannel {
+    <<abstract>>
+    +send(m) DeliveryResult  «template method»
+    #deliver(m, record)* DeliveryResult
+  }
+  NotificationService --> NotificationChannelFactory
+  NotificationChannelFactory o-- NotificationChannel
+  NotificationChannel <|.. AbstractPersistingChannel
+  AbstractPersistingChannel <|-- InAppNotificationChannel
+  AbstractPersistingChannel <|-- EmailNotificationChannel
+  AbstractPersistingChannel <|-- SmsNotificationChannel
+  EmailNotificationChannel --> JavaMailSender : adapts
+  SmsNotificationChannel --> ThirdPartySmsGatewayClient : adapts

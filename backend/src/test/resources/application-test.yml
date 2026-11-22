@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:itsm-test;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+itsm:
+  sla:
+    monitor-enabled: false
+    time-scale: 1
+  seed:
+    enabled: true
+logging:
+  level:
+    com.itsm: WARN

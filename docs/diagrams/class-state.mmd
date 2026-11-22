@@ -1,0 +1,47 @@
+classDiagram
+  direction LR
+  class Incident {
+    -IncidentStatus status
+    -IncidentState state
+    ~moveTo(next, at)
+    +acknowledge(at)
+    +resolve(r, at)
+    +close(notes, by, at)
+  }
+  class IncidentState {
+    <<interface>>
+    +status() IncidentStatus
+    +allowedTransitions() Set
+    +supportedActions() Set
+    +assign(i, t, at)
+    +acknowledge(i, at)
+    +startWork(i, at)
+    +requestInfo(i, at)
+    +provideInfo(i, at)
+    +resolve(i, r, at)
+    +verify(i, at)
+    +reopen(i, at)
+    +close(i, notes, by, at)
+    +cancel(i, reason, at)
+  }
+  class AbstractIncidentState {
+    <<abstract>>
+    every action throws InvalidStateTransitionException
+    #reject(action)
+  }
+  class IncidentStateFactory {
+    +forStatus(IncidentStatus)$ IncidentState
+  }
+  Incident --> IncidentState : delegates
+  IncidentStateFactory ..> IncidentState : creates
+  IncidentState <|.. AbstractIncidentState
+  AbstractIncidentState <|-- NewState
+  AbstractIncidentState <|-- ClassifiedState
+  AbstractIncidentState <|-- AssignedState
+  AbstractIncidentState <|-- AcknowledgedState
+  AbstractIncidentState <|-- InProgressState
+  AbstractIncidentState <|-- AwaitingInfoState
+  AbstractIncidentState <|-- ResolvedState
+  AbstractIncidentState <|-- VerifiedState
+  AbstractIncidentState <|-- ClosedState
+  AbstractIncidentState <|-- CancelledState

@@ -1,0 +1,20 @@
+stateDiagram-v2
+  [*] --> NEW : employee reports
+  NEW --> CLASSIFIED : categorised + prioritised + SLA started
+  NEW --> CANCELLED : cancel
+  CLASSIFIED --> ASSIGNED : assign (auto / manual)
+  CLASSIFIED --> CANCELLED : cancel
+  ASSIGNED --> ASSIGNED : reassign / escalate
+  ASSIGNED --> ACKNOWLEDGED : acknowledge (response SLA met/breached)
+  ASSIGNED --> CANCELLED : cancel
+  ACKNOWLEDGED --> IN_PROGRESS : start work
+  ACKNOWLEDGED --> ASSIGNED : reassign
+  IN_PROGRESS --> AWAITING_INFO : request info (SLA paused)
+  AWAITING_INFO --> IN_PROGRESS : reporter replies (SLA resumed)
+  IN_PROGRESS --> RESOLVED : resolve
+  IN_PROGRESS --> ASSIGNED : reassign
+  RESOLVED --> VERIFIED : reporter confirms
+  RESOLVED --> IN_PROGRESS : reopen
+  VERIFIED --> CLOSED : close
+  CLOSED --> [*]
+  CANCELLED --> [*]

@@ -1,0 +1,106 @@
+@import "tailwindcss";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/jetbrains-mono";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens - neutral, Vercel-like. Colour is reserved for meaning. */
+:root {
+  --background: #ffffff;
+  --foreground: #0e1513;
+  --surface: #f7f9f9;
+  --surface-2: #eef2f1;
+  --border: #e3e8e7;
+  --border-strong: #cdd6d4;
+  --muted: #5f6e6b;
+  --subtle: #93a09d;
+  /* brand: deep teal, used for primary actions, selection and focus */
+  --brand: #0d7a6f;
+  --brand-fg: #ffffff;
+  --brand-soft: #e6f4f1;
+  --accent: #1d6fd6;
+  --accent-soft: #e9f1fc;
+  --red: #d93f45;
+  --red-soft: #fcecec;
+  --amber: #b26b00;
+  --amber-soft: #fff3df;
+  --green: #18794e;
+  --green-soft: #e5f5ec;
+  --ring: #0d7a6f;
+  /* chart series (validated: CVD dE 24.7, contrast >= 3:1 on surface) */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0b1110;
+  --foreground: #e6edeb;
+  --surface: #111917;
+  --surface-2: #18211f;
+  --border: #232d2b;
+  --border-strong: #34413e;
+  --muted: #9aa8a5;
+  --subtle: #66736f;
+  --brand: #33b8a7;
+  --brand-fg: #04201c;
+  --brand-soft: #0f2723;
+  --accent: #5a9cf0;
+  --accent-soft: #0f1f33;
+  --red: #ff6b70;
+  --red-soft: #2b1314;
+  --amber: #f2b24a;
+  --amber-soft: #2a1f0b;
+  --green: #4cc38a;
+  --green-soft: #0f2419;
+  --ring: #33b8a7;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-brand: var(--brand);
+  --color-brand-fg: var(--brand-fg);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-red: var(--red);
+  --color-red-soft: var(--red-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+  --color-green: var(--green);
+  --color-green-soft: var(--green-soft);
+  --color-ring: var(--ring);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  * { border-color: var(--border); }
+  html, body { background: var(--background); color: var(--foreground); }
+  body {
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--brand-soft); }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+}
+
+@keyframes pulse-dot { 0%, 100% { opacity: 1 } 50% { opacity: .35 } }
+.animate-pulse-dot { animation: pulse-dot 1.6s ease-in-out infinite; }
+
+@keyframes slide-in { from { opacity: 0; transform: translateY(-4px) } to { opacity: 1; transform: none } }
+.animate-in { animation: slide-in .18s ease-out; }

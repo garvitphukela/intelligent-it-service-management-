@@ -1,0 +1,51 @@
+flowchart LR
+  E(["👤 Employee"])
+  T(["🛠 Technician"])
+  L(["🧭 Team Lead"])
+  A(["⚙ Administrator"])
+  M(["📊 IT Manager"])
+  S(["⏱ SLA Monitor (system)"])
+  subgraph R["Reporting"]
+    direction TB
+    UC1([Register / log in])
+    UC2([Report incident])
+    UC3([Track status & history])
+    UC4([Provide requested information])
+    UC5([Verify resolution / reopen])
+    UC6([Give feedback])
+  end
+  subgraph W["Support work"]
+    direction TB
+    UC7([View queue & workload])
+    UC8([Acknowledge / start work])
+    UC9([Add investigation notes])
+    UC10([Request information])
+    UC11([Resolve & close incident])
+    UC13([Link duplicates])
+    UC12([Assign / reassign])
+  end
+  subgraph AD["Administration"]
+    direction TB
+    UC14([Manage users & technicians])
+    UC15([Manage services, categories, SLAs])
+    UC16([Configure strategies])
+    UC17([Dashboards & reports])
+    UC18([Audit & notification logs])
+  end
+  subgraph AU["Automation"]
+    direction TB
+    UC19([Auto classify, prioritise, assign])
+    UC20([Detect SLA breach & escalate])
+    UC21([Correlate incidents])
+    UC22([Notify stakeholders])
+  end
+  E --- R
+  T --- W
+  L --- UC12
+  L -. "is a" .-> T
+  W ~~~ AD
+  AD --- A
+  M -. "is a" .-> A
+  UC2 -. "«include»" .-> UC19
+  AU --- S
+  UC19 -. "«include»" .-> UC22

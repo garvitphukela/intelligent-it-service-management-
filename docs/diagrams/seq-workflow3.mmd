@@ -1,0 +1,24 @@
+sequenceDiagram
+  autonumber
+  participant M as SlaMonitor (@Scheduled)
+  participant S as SlaMonitoringService
+  participant T as SlaTracker
+  participant ES as EscalationService
+  participant CO as IncidentCorrelator
+  participant EP as EventPublisher
+  loop every N seconds
+    M->>S: runCycle()
+    S->>T: detectBreaches(now) / shouldWarn(now)
+    alt breach
+      S->>EP: SlaBreached
+    else threshold or predicted risk
+      S->>EP: SlaWarning
+    end
+    S->>ES: check(incident, now)
+    alt unacknowledged P1/P2 past 100% / 150% / 200%
+      ES->>EP: IncidentAssigned (to Team Lead), Escalated(level)
+    end
+    S->>CO: findClusters()
+    CO-->>S: clusters sharing a root service
+    S->>EP: MajorIncidentDetected
+  end

@@ -1,0 +1,43 @@
+flowchart TB
+  subgraph Clients["Clients (browser)"]
+    EMP["Employee portal"]
+    TEC["Technician console"]
+    ADM["Admin / Manager dashboard"]
+  end
+  subgraph FE["React SPA (Vite, TypeScript, Tailwind)"]
+    UI["Pages & components"]
+    RQ["TanStack Query cache"]
+    WS["STOMP client"]
+  end
+  EMP --> UI
+  TEC --> UI
+  ADM --> UI
+  UI --> RQ
+  RQ -- "REST / JSON + JWT" --> SEC
+  WS -- "WebSocket /ws (STOMP)" --> BRK
+  subgraph BE["Spring Boot 4 application (Java 21)"]
+    SEC["Security filter chain<br/>JWT + RBAC"]
+    CTRL["REST controllers"]
+    SVC["Application services<br/>IncidentService, AssignmentService,<br/>SlaService, ReportService"]
+    DOM["Domain model<br/>Incident + State machine, Users,<br/>Services, SLA policies"]
+    STR["Strategies<br/>Priority / Assignment"]
+    INT["Intelligence<br/>Categoriser, Duplicates, Correlation,<br/>SLA risk, Resolution advisor"]
+    EVT["Event publisher (Observer)"]
+    LST["Listeners: Audit, Notification, Dashboard"]
+    NCH["Notification channels (Adapter)<br/>In-app, Email (SMTP), SMS gateway"]
+    MON["SLA monitor (@Scheduled)<br/>breach, warning, escalation"]
+    BRK["STOMP broker"]
+    REPO["Repositories (Spring Data JPA)"]
+    SEC --> CTRL --> SVC
+    SVC --> DOM
+    SVC --> STR
+    SVC --> INT
+    SVC --> EVT --> LST
+    LST --> NCH
+    LST --> BRK
+    MON --> SVC
+    SVC --> REPO
+  end
+  REPO --> DB[("PostgreSQL<br/>(H2 in development)")]
+  NCH -. optional .-> SMTP["SMTP server"]
+  NCH -. simulated .-> SMS["SMS provider"]

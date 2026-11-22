@@ -1,0 +1,83 @@
+spring:
+  application:
+    name: itsm
+  datasource:
+    url: jdbc:h2:file:./data/itsm;AUTO_SERVER=TRUE
+    username: sa
+    password: ""
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+  jackson:
+    default-property-inclusion: non_null
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: always
+
+management:
+  health:
+    mail:
+      enabled: false   # SMTP is optional; e-mail falls back to simulation
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+itsm:
+  cors-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:8080}
+  jwt:
+    secret: ${JWT_SECRET:dev-only-secret-please-override-in-production-0123456789}
+    expiration-minutes: 720
+  sla:
+    # Divide policy minutes by this factor so SLA breaches/escalations are visible in a live demo.
+    time-scale: ${SLA_TIME_SCALE:10}
+    monitor-interval-ms: ${SLA_MONITOR_INTERVAL_MS:10000}
+  notifications:
+    email-enabled: ${EMAIL_ENABLED:false}
+    email-from: ${MAIL_FROM:itsm-noreply@example.com}
+  intelligence:
+    duplicate-threshold: 0.35
+    likely-duplicate-threshold: 0.6
+    duplicate-window-days: 7
+    correlation-window-minutes: 120
+    correlation-min-incidents: 3
+  seed:
+    enabled: ${SEED_ENABLED:true}
+
+logging:
+  level:
+    com.itsm: INFO
+    org.hibernate.orm.deprecation: ERROR
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:itsm}}
+    username: ${DB_USER:itsm}
+    password: ${DB_PASSWORD:itsm}
+    hikari:
+      maximum-pool-size: 10
