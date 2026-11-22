@@ -1,0 +1,33 @@
+# Render Blueprint: one Docker web service + a managed PostgreSQL database.
+# Deploy: Render dashboard -> New -> Blueprint -> select this repository.
+databases:
+  - name: itsm-db
+    plan: free
+    databaseName: itsm
+    user: itsm
+
+services:
+  - type: web
+    name: itsm
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_HOST
+        fromDatabase: { name: itsm-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: itsm-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: itsm-db, property: database }
+      - key: DB_USER
+        fromDatabase: { name: itsm-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: itsm-db, property: password }
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SLA_TIME_SCALE
+        value: "10"
+      - key: CORS_ORIGINS
+        value: https://*.onrender.com
